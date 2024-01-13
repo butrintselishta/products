@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Contracts\ApiClientInterface;
 use App\Services\ProductService;
 use Exception;
 use Illuminate\Console\Command;
@@ -24,19 +25,15 @@ class ImportProducts extends Command
      */
     protected $description = 'Command description';
 
-    protected $getProductsApi;
-    protected $productService;
-
     /**
      * @return void
      */
-    public function __construct(ProductService $productService)
+    public function __construct(
+        private ProductService $productService,
+        private ApiClientInterface $adapter
+    )
     {
         parent::__construct();
-
-        $this->getProductsApi = 'https://fakestoreapi.com/products';
-
-        $this->productService = $productService;
     }
 
     /**
@@ -46,42 +43,23 @@ class ImportProducts extends Command
     {
         try {
             $this->info("Proccess started!");
-            $products = $this->getProducts();
+            $products = $this->adapter->get();
+
             $progressBar = $this->output->createProgressBar(count($products));
             $progressBar->start();
 
-            DB::beginTransaction();
-            try {
+            DB::transaction(function () use($products, $progressBar) {
                 foreach ($products as $productPayload) {
                     $this->productService->importProducts($productPayload);
                     $progressBar->advance();
                 }
-                $progressBar->finish();
-                $this->newLine();
-                $this->info("Proccess finished successfully!");
-                DB::commit();
-            } catch (\Exception $e) {
-                DB::rollBack();
-                throw $e;
-            }
+            });
+
+            $progressBar->finish();
+            $this->newLine();
+            $this->info("Proccess finished successfully!");
         } catch(Exception $e) {
             throw $e;
         }
-    }
-
-    /**
-     * Summary of getProducts
-     * @throws \Exception
-     * @return mixed
-     */
-    private function getProducts()
-    {
-        $response = Http::get($this->getProductsApi);
-
-        if ($response->failed()) {
-            throw new \Exception("API request failed with status code: " . $response->status(), $response->status());
-        }
-
-        return json_decode($response->body(), true);
     }
 }

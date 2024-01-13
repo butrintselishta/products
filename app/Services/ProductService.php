@@ -42,9 +42,9 @@ class ProductService
      * @param array $productPayload
      * @return Product
      */
-    public function createOrUpdate(array $productPayload)
+    public function updateOrCreate(array $productPayload)
     {
-        return Product::updateOrCreate(['id' => $productPayload['id']],$productPayload);
+        return Product::updateOrCreate(['id' => $productPayload['id']], $productPayload);
     }
 
     /**
@@ -61,7 +61,7 @@ class ProductService
         }
 
         $productPayload['category_id'] = $category->id;
-        $product = $this->createOrUpdate($productPayload);
+        $product = $this->updateOrCreate($productPayload);
 
         $product->rating()->create($productPayload['rating']);
     }

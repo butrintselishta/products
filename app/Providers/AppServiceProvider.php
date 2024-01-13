@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Contracts\ApiClientInterface;
+use App\Services\FakeStoreApiService;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\ServiceProvider;
 
@@ -12,7 +15,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        App::bind(ApiClientInterface::class, FakeStoreApiService::class);
     }
 
     /**
