@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Http;
 
 class FakeStoreApiService implements ApiClientInterface
 {
+    /**
+     * @return array
+     */
     public function get(): array
     {
         $response = Http::get(config('config.fake_store_api'));

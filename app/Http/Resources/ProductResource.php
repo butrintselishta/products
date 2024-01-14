@@ -9,10 +9,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * Class ProductResource
  * @package App\Http\Resources\ProductResources
  *
- * @property int id
- * @property string title
- * @p
- *
  * @OA\Schema(
  *     type="object",
  *     schema="ProductResource",
