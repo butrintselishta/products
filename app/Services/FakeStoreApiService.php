@@ -12,7 +12,7 @@ class FakeStoreApiService implements ApiClientInterface
         $response = Http::get(config('config.fake_store_api'));
 
         if ($response->failed()) {
-            throw new \Exception("API request failed with status code: " . $response->status(), $response->status());
+            throw new \Exception("API request failed: " . $response->getMessage(), $response->status());
         }
 
         return json_decode($response->body(), true);
