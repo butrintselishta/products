@@ -4,7 +4,10 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Throwable;
@@ -42,6 +45,8 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $e): JsonResponse
     {
+        $this->logException($request, $e);
+
         if ($e instanceof UnauthorizedHttpException) {
             return $this->handleUnauthorizedException($e);
         }
@@ -50,11 +55,47 @@ class Handler extends ExceptionHandler
             return $this->handleNotFoundException($e);
         }
 
+        if ($e instanceof MethodNotAllowedHttpException) {
+            return $this->handleMethodNotAllowedException($e);
+        }
+
         if ($e instanceof ValidationException) {
             return $this->handleValidationException($e);
         }
-        dd($e);
-        return $this->handleGeneralException($e);
+
+        return $this->handleGeneralException();
+    }
+
+    /**
+     * Log the exception by providing neccessary informations to debug
+     * @param \Illuminate\Http\Request $request
+     * @param \Throwable $e
+     * @return void
+     */
+    private function logException(Request $request, Throwable $e)
+    {
+        Log::error($e->getMessage(), [
+            'exception' => get_class($e),
+            'request' => $request->all(),
+            'user_id' => auth()->id(),
+            'url' => $request->url(),
+        ]);
+    }
+
+    /**
+     * Centralized error json response
+     * @param int $statusCode
+     * @param string $message
+     * @param array $errors
+     * @return \Illuminate\Http\JsonResponse
+     */
+    private function handleErrorResponse(int $statusCode, string $message, array $errors = []): JsonResponse
+    {
+        return response()->json([
+            'statusCode' => $statusCode,
+            'message' => $message,
+            'errors' => $errors,
+        ], $statusCode);
     }
 
     /**
@@ -64,10 +105,7 @@ class Handler extends ExceptionHandler
      */
     private function handleUnauthorizedException(Throwable $e): JsonResponse
     {
-        return response()->json([
-            'statusCode' => $e->getStatusCode(),
-            'message' => $e->getMessage(),
-        ], $e->getStatusCode());
+        return $this->handleErrorResponse($e->getStatusCode(), $e->getMessage());
     }
 
     /**
@@ -77,10 +115,18 @@ class Handler extends ExceptionHandler
      */
     private function handleNotFoundException(Throwable $e): JsonResponse
     {
-        return response()->json([
-            'statusCode' => $e->status,
-            'errors' => $e->errors(),
-        ], $e->status);
+        return $this->handleErrorResponse($e->getStatusCode(), $e->getMessage());
+    }
+
+
+    /**
+     * Handle method not allowed error reponse
+     * @param \Throwable $e
+     * @return \Illuminate\Http\JsonResponse
+     */
+    private function handleMethodNotAllowedException(Throwable $e)
+    {
+        return $this->handleErrorResponse($e->getStatusCode(), $e->getMessage());
     }
 
     /**
@@ -90,10 +136,7 @@ class Handler extends ExceptionHandler
      */
     private function handleValidationException(Throwable $e): JsonResponse
     {
-        return response()->json([
-            'statusCode' => $e->getStatusCode(),
-            'message' => $e->getMessage(),
-        ], $e->getStatusCode());
+        return $this->handleErrorResponse($e->status, "", $e->errors());
     }
 
     /**
@@ -103,9 +146,6 @@ class Handler extends ExceptionHandler
      */
     private function handleGeneralException(): JsonResponse
     {
-        return response()->json([
-            'statusCode' => 500,
-            'message' => "Something went wrong, please contact our support.",
-        ], 500);
+        return $this->handleErrorResponse(500, "Something went wrong, please contact our support.");
     }
 }
