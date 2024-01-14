@@ -1,0 +1,238 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Products OpenAPI",
+        "description": "Products OpenAPI",
+        "license": {
+            "name": "Apache 2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/products/{id}": {
+            "patch": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Update a specific product in database",
+                "description": "This endpoint is used to update a specific product by providing the product id",
+                "operationId": "updateProduct",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The primary key of the table, serving as a unique identifier for each product record.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateProductRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The client's request operation has been completed successfully.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductResource"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication failed: Please ensure that you have provided valid credentials to access this resource!",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnauthenticatedResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error: There was an unexpected condition that prevented the server from fulfilling the API request. Please try again later!",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt_token_security": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "UnauthenticatedResponse": {
+                "properties": {
+                    "statusCode": {
+                        "description": "The status code.",
+                        "type": "number",
+                        "default": 401
+                    },
+                    "message": {
+                        "description": "Error message.",
+                        "type": "string",
+                        "default": ""
+                    },
+                    "errors": {
+                        "description": "The list of the errors.",
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "example": ""
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "ServerErrorResponse": {
+                "properties": {
+                    "statusCode": {
+                        "description": "The status code.",
+                        "type": "number",
+                        "default": 500
+                    },
+                    "message": {
+                        "description": "Error message.",
+                        "type": "string",
+                        "default": "Something went wrong, please contact our support."
+                    },
+                    "errors": {
+                        "description": "The list of the errors.",
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "example": ""
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateProductRequest": {
+                "required": [
+                    "title",
+                    "description",
+                    "image",
+                    "price"
+                ],
+                "properties": {
+                    "title": {
+                        "description": "The label or the key that identifies the product.",
+                        "type": "string",
+                        "example": "Woman's clothing"
+                    },
+                    "description": {
+                        "description": "The description of the product",
+                        "type": "string",
+                        "example": "Woman's clothing description..."
+                    },
+                    "image": {
+                        "description": "The image of the product",
+                        "type": "string",
+                        "example": "https://test.test/img.png"
+                    },
+                    "price": {
+                        "description": "The price of the product.",
+                        "type": "number",
+                        "format": "float",
+                        "example": "50.99"
+                    }
+                },
+                "type": "object"
+            },
+            "ProductResource": {
+                "properties": {
+                    "id": {
+                        "description": "The primary key of the table, serving as a unique identifier for each product record.",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "title": {
+                        "description": "The label or the name that identifies an product.",
+                        "type": "string",
+                        "example": "T Shirt Casual"
+                    },
+                    "price": {
+                        "description": "The price of this product.",
+                        "type": "number",
+                        "format": "float",
+                        "example": 120.2
+                    },
+                    "description": {
+                        "description": "The description of the product",
+                        "type": "string",
+                        "example": "95% Cotton,5% Spandex, Features: Casual"
+                    },
+                    "category": {
+                        "description": "The category of the product",
+                        "type": "string",
+                        "example": "Men's clothing"
+                    },
+                    "image": {
+                        "description": "The image of th eproduct",
+                        "type": "string"
+                    },
+                    "rating": {
+                        "description": "The track of rating of this product",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/RatingResource"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "RatingResource": {
+                "properties": {
+                    "rate": {
+                        "description": "The average rating of this product (1 to 5).",
+                        "type": "number",
+                        "format": "float",
+                        "example": "3.6"
+                    },
+                    "count": {
+                        "description": "The number of people that have rated this product.",
+                        "type": "number",
+                        "format": "float",
+                        "example": 155
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "jwt_token_security": {
+                "type": "apiKey",
+                "description": "JWT token authentication",
+                "name": "Authorization",
+                "in": "header",
+                "bearerFormat": "JWT"
+            }
+        }
+    },
+    "security": [
+        {
+            "jwt_token_security": []
+        }
+    ]
+}

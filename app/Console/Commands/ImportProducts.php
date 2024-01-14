@@ -30,7 +30,7 @@ class ImportProducts extends Command
      */
     public function __construct(
         private ProductService $productService,
-        private ApiClientInterface $adapter
+        private ApiClientInterface $apiClient
     )
     {
         parent::__construct();
@@ -43,7 +43,8 @@ class ImportProducts extends Command
     {
         try {
             $this->info("Proccess started!");
-            $products = $this->adapter->get();
+            $products = $this->apiClient->get();
+            dd($products);
 
             $progressBar = $this->output->createProgressBar(count($products));
             $progressBar->start();

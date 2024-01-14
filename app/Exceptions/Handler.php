@@ -99,6 +99,15 @@ class Handler extends ExceptionHandler
     }
 
     /**
+     *
+     * @OA\Schema(
+     *     type="object",
+     *     schema="UnauthenticatedResponse",
+     *     @OA\Property(property="statusCode",description="The status code.",type="number",default=401),
+     *     @OA\Property(property="message",description="Error message.",type="string",default=""),
+     *     @OA\Property(property="errors",description="The list of the errors.",type="array",@OA\Items(type="string", example="")),
+     * )
+     *
      * Handle unauthorized error reponse
      * @param \Throwable $e
      * @return \Illuminate\Http\JsonResponse
@@ -140,6 +149,14 @@ class Handler extends ExceptionHandler
     }
 
     /**
+     * @OA\Schema(
+     *     type="object",
+     *     schema="ServerErrorResponse",
+     *     @OA\Property(property="statusCode",description="The status code.",type="number",default=500),
+     *     @OA\Property(property="message",description="Error message.",type="string",default="Something went wrong, please contact our support."),
+     *     @OA\Property(property="errors",description="The list of the errors.",type="array",@OA\Items(type="string", example="")),
+     * )
+     *
      * Handle general/server error reponse
      * @param \Throwable $e
      * @return \Illuminate\Http\JsonResponse

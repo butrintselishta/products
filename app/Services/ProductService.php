@@ -2,10 +2,9 @@
 
 namespace App\Services;
 
+use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 
 class ProductService
 {
@@ -30,11 +29,12 @@ class ProductService
      * Update product's data
      * @param Request $request
      * @param \App\Models\Product $product
-     * @return bool
+     * @return ProductResource
      */
-    public function update(Request $request, Product $product): bool
+    public function update(Request $request, Product $product): ProductResource
     {
-        return $product->update($request->validated());
+        $product->update($request->validated());
+        return new ProductResource($product);
     }
 
     /**
