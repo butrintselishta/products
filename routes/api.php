@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,5 +18,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/register', [AuthController::class, 'register']);
-Route::put('/products/{id}', [ProductController::class, 'update'])->middleware('jwt');
+Route::post('/register', [UserController::class, 'register']);
+
+Route::middleware('jwt')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::put('/products/{id}', [ProductController::class, 'update']);
+});

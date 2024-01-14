@@ -114,7 +114,7 @@ class Handler extends ExceptionHandler
      */
     private function handleUnauthorizedException(Throwable $e): JsonResponse
     {
-        return $this->handleErrorResponse($e->getStatusCodee(), $e->getMessage());
+        return $this->handleErrorResponse($e->getStatusCode(), $e->getMessage());
     }
 
     /**

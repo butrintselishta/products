@@ -7,16 +7,14 @@ use App\Services\ProductService;
 
 class ProductController extends Controller
 {
-    protected $productService;
-
     /**
      * Create a new Product Controller instance
      * @param \App\Services\ProductService $productService
      * @return void
      */
-    public function __construct(ProductService $productService)
+    public function __construct(private ProductService $productService)
     {
-        $this->productService = $productService;
+        //
     }
 
     /**

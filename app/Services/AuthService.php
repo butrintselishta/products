@@ -2,12 +2,7 @@
 
 namespace App\Services;
 
-use App\Http\Requests\RegisterRequest;
-use App\Http\Resources\UserResource;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -23,26 +18,23 @@ class AuthService
     {
         $credentials = $request->only('email', 'password');
 
-        if (!$token = JWTAuth::attempt($credentials)) {
-            throw new UnauthorizedHttpException("","Invalid credentials");
-        }
+        try{
+            if (!$token = JWTAuth::attempt($credentials)) {
+                throw new UnauthorizedHttpException("","Invalid credentials");
+            }
 
-        return $token;
+            return $token;
+        } catch (\Exception $e) {
+            throw $e;
+        }
     }
 
     /**
-     *
-     * Handle a register request attempt.
-     * @param \Illuminate\Http\Request $request
-     * @throws \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException
-     * @return UserResource
+     * Handle an logout attempt.
+     * @return void
      */
-    public function register(Request $request): UserResource
+    public function logout()
     {
-        $payload = $request->validated();
-
-        $user = User::create($payload);
-
-        return new UserResource($user);
+        JWTAuth::invalidate(JWTAuth::getToken());
     }
 }

@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthTest extends TestCase
 {
@@ -30,23 +30,21 @@ class AuthTest extends TestCase
     }
 
     /**
-     * Test register
-     */
-    public function test_register(): void
+    * Test logout.
+    *
+    */
+    public function testLogout()
     {
-        $requestData = [
-            'name' => $this->faker->name,
-            'email' => $this->faker->unique()->safeEmail,
-            'password' => 'password',
-        ];
+        $user = User::factory()->create();
+        $this->actingAs($user);
 
-        $response = $this->postJson('/api/register', $requestData);
-        $response->assertStatus(200);
-        $this->assertDatabaseHas('users', ['email' => $requestData['email']]);
-        $user = User::where('email', $requestData['email'])->first();
-        $userResource = new UserResource($user);
-        $userArray = $userResource->toArray();
-        $response->assertEquals($userResource->name);
-        $response->assertEquals($userResource->email);
+        $response = $this->json('POST', 'api/logout', [], [
+            'Authorization' => 'Bearer ' . JWTAuth::fromUser($user)
+        ]);
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(['data', 'statusCode']);
     }
+
 }
