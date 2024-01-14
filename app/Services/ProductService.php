@@ -4,7 +4,9 @@ namespace App\Services;
 
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use Exception;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ProductService
 {
@@ -28,13 +30,24 @@ class ProductService
     /**
      * Update product's data
      * @param Request $request
-     * @param \App\Models\Product $product
+     * @param int $productId
      * @return ProductResource
      */
-    public function update(Request $request, Product $product): ProductResource
+    public function update(Request $request, int $productId): ProductResource
     {
-        $product->update($request->validated());
-        return new ProductResource($product);
+        try{
+            $product = $this->findById($productId);
+
+            if(!$product) {
+                throw new NotFoundHttpException('Product not found');
+            }
+
+            $product->update($request->validated());
+
+            return new ProductResource($product);
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
 
     /**

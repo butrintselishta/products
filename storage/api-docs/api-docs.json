@@ -61,6 +61,26 @@
                             }
                         }
                     },
+                    "404": {
+                        "description": "Resource not found: The requested resource was not found on the server!",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NotFoundResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation failed: The server could not process the request due to validation errors.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FailedValidationResponse"
+                                }
+                            }
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error: There was an unexpected condition that prevented the server from fulfilling the API request. Please try again later!",
                         "content": {
@@ -90,7 +110,7 @@
                         "default": 401
                     },
                     "message": {
-                        "description": "Error message.",
+                        "description": "Unauthenticated error message.",
                         "type": "string",
                         "default": ""
                     },
@@ -105,6 +125,77 @@
                 },
                 "type": "object"
             },
+            "NotFoundResponse": {
+                "properties": {
+                    "statusCode": {
+                        "description": "The status code.",
+                        "type": "number",
+                        "default": 404
+                    },
+                    "message": {
+                        "description": "Not found error message.",
+                        "type": "string",
+                        "default": ""
+                    },
+                    "errors": {
+                        "description": "The list of the errors.",
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "example": ""
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "MethodNotAllowedResponse": {
+                "properties": {
+                    "statusCode": {
+                        "description": "The status code.",
+                        "type": "number",
+                        "default": 405
+                    },
+                    "message": {
+                        "description": "Method not allowed error message.",
+                        "type": "string",
+                        "default": ""
+                    },
+                    "errors": {
+                        "description": "The list of the errors.",
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "example": ""
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "FailedValidationResponse": {
+                "properties": {
+                    "statusCode": {
+                        "description": "The status code.",
+                        "type": "number",
+                        "default": 422
+                    },
+                    "message": {
+                        "description": "Failed validation error message.",
+                        "type": "string",
+                        "default": ""
+                    },
+                    "errors": {
+                        "description": "The list of the errors.",
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "example": {
+                                "title": "title is required"
+                            }
+                        }
+                    }
+                },
+                "type": "object"
+            },
             "ServerErrorResponse": {
                 "properties": {
                     "statusCode": {
@@ -113,7 +204,7 @@
                         "default": 500
                     },
                     "message": {
-                        "description": "Error message.",
+                        "description": "Unauthenticated error message.",
                         "type": "string",
                         "default": "Something went wrong, please contact our support."
                     },
@@ -121,8 +212,7 @@
                         "description": "The list of the errors.",
                         "type": "array",
                         "items": {
-                            "type": "string",
-                            "example": ""
+                            "type": "string"
                         }
                     }
                 },

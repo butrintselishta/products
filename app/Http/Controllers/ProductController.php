@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateProductRequest;
 use App\Services\ProductService;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ProductController extends Controller
 {
@@ -34,6 +32,8 @@ class ProductController extends Controller
      *     @OA\RequestBody(required=true,@OA\JsonContent(ref="#/components/schemas/UpdateProductRequest")),
      *     @OA\Response(response=200,description="The client's request operation has been completed successfully.",@OA\JsonContent(ref="#/components/schemas/ProductResource")),
      *     @OA\Response(response=401,description="Authentication failed: Please ensure that you have provided valid credentials to access this resource!",@OA\JsonContent(ref="#/components/schemas/UnauthenticatedResponse")),
+     *     @OA\Response(response=404,description="Resource not found: The requested resource was not found on the server!",@OA\JsonContent(ref="#/components/schemas/NotFoundResponse")),
+     *     @OA\Response(response=422,description="Validation failed: The server could not process the request due to validation errors.",@OA\JsonContent(ref="#/components/schemas/FailedValidationResponse")),
      *     @OA\Response(response=500,description="Internal Server Error: There was an unexpected condition that prevented the server from fulfilling the API request. Please try again later!",@OA\JsonContent(ref="#/components/schemas/ServerErrorResponse"))
      * )
      *
@@ -44,10 +44,6 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, int $id)
     {
-        $product = $this->productService->findById($id);
-        if(!$product) {
-            throw new NotFoundHttpException('Product not found');
-        }
-        return response()->success($this->productService->update($request, $product));
+        return response()->success($this->productService->update($request, $id));
     }
 }

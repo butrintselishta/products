@@ -63,7 +63,7 @@ class Handler extends ExceptionHandler
             return $this->handleValidationException($e);
         }
 
-        return $this->handleGeneralException();
+        return $this->handleGeneralException($e);
     }
 
     /**
@@ -104,8 +104,8 @@ class Handler extends ExceptionHandler
      *     type="object",
      *     schema="UnauthenticatedResponse",
      *     @OA\Property(property="statusCode",description="The status code.",type="number",default=401),
-     *     @OA\Property(property="message",description="Error message.",type="string",default=""),
-     *     @OA\Property(property="errors",description="The list of the errors.",type="array",@OA\Items(type="string", example="")),
+     *     @OA\Property(property="message",description="Unauthenticated error message.",type="string",default=""),
+     *     @OA\Property(property="errors",description="The list of the errors.",type="array"),
      * )
      *
      * Handle unauthorized error reponse
@@ -114,10 +114,19 @@ class Handler extends ExceptionHandler
      */
     private function handleUnauthorizedException(Throwable $e): JsonResponse
     {
-        return $this->handleErrorResponse($e->getStatusCode(), $e->getMessage());
+        return $this->handleErrorResponse($e->getStatusCodee(), $e->getMessage());
     }
 
     /**
+     *
+     * @OA\Schema(
+     *     type="object",
+     *     schema="NotFoundResponse",
+     *     @OA\Property(property="statusCode",description="The status code.",type="number",default=404),
+     *     @OA\Property(property="message",description="Not found error message.",type="string",default=""),
+     *     @OA\Property(property="errors",description="The list of the errors.",type="array"),
+     * )
+     *
      * Handle not found error reponse
      * @param \Throwable $e
      * @return \Illuminate\Http\JsonResponse
@@ -129,6 +138,15 @@ class Handler extends ExceptionHandler
 
 
     /**
+     *
+     * @OA\Schema(
+     *     type="object",
+     *     schema="MethodNotAllowedResponse",
+     *     @OA\Property(property="statusCode",description="The status code.",type="number",default=405),
+     *     @OA\Property(property="message",description="Method not allowed error message.",type="string",default=""),
+     *     @OA\Property(property="errors",description="The list of the errors.",type="array"),
+     * )
+     *
      * Handle method not allowed error reponse
      * @param \Throwable $e
      * @return \Illuminate\Http\JsonResponse
@@ -139,6 +157,15 @@ class Handler extends ExceptionHandler
     }
 
     /**
+     *
+     * @OA\Schema(
+     *     type="object",
+     *     schema="FailedValidationResponse",
+     *     @OA\Property(property="statusCode",description="The status code.",type="number",default=422),
+     *     @OA\Property(property="message",description="Failed validation error message.",type="string",default=""),
+     *     @OA\Property(property="errors",description="The list of the errors.",type="array",@OA\Items(type="string", example={"title": "title is required"})),
+     * )
+     *
      * Handle validation error reponse
      * @param \Throwable $e
      * @return \Illuminate\Http\JsonResponse
@@ -153,16 +180,17 @@ class Handler extends ExceptionHandler
      *     type="object",
      *     schema="ServerErrorResponse",
      *     @OA\Property(property="statusCode",description="The status code.",type="number",default=500),
-     *     @OA\Property(property="message",description="Error message.",type="string",default="Something went wrong, please contact our support."),
-     *     @OA\Property(property="errors",description="The list of the errors.",type="array",@OA\Items(type="string", example="")),
+     *     @OA\Property(property="message",description="Unauthenticated error message.",type="string",default="Something went wrong, please contact our support."),
+     *     @OA\Property(property="errors",description="The list of the errors.",type="array"),
      * )
      *
      * Handle general/server error reponse
      * @param \Throwable $e
      * @return \Illuminate\Http\JsonResponse
      */
-    private function handleGeneralException(): JsonResponse
+    private function handleGeneralException(Throwable $e): JsonResponse
     {
-        return $this->handleErrorResponse(500, "Something went wrong, please contact our support.");
+        $message = $e->getMessage() ?? "Something went wrong, please contact our support.";
+        return $this->handleErrorResponse(500, $message);
     }
 }
