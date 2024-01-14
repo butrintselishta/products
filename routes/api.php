@@ -17,4 +17,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/login', [AuthController::class, 'login']);
-Route::patch('/products/{id}', [ProductController::class, 'update'])->middleware('jwt');
+Route::post('/register', [AuthController::class, 'register']);
+Route::put('/products/{id}', [ProductController::class, 'update'])->middleware('jwt');

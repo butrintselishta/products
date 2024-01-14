@@ -10,8 +10,64 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "description": "This endpoint is used to register a new user",
+                "operationId": "register",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserRegister"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The client's request operation has been completed successfully.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation failed: The server could not process the request due to validation errors.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FailedValidationResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error: There was an unexpected condition that prevented the server from fulfilling the API request. Please try again later!",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt_token_security": []
+                    }
+                ]
+            }
+        },
         "/api/products/{id}": {
-            "patch": {
+            "put": {
                 "tags": [
                     "Products"
                 ],
@@ -118,8 +174,7 @@
                         "description": "The list of the errors.",
                         "type": "array",
                         "items": {
-                            "type": "string",
-                            "example": ""
+                            "type": "string"
                         }
                     }
                 },
@@ -141,8 +196,7 @@
                         "description": "The list of the errors.",
                         "type": "array",
                         "items": {
-                            "type": "string",
-                            "example": ""
+                            "type": "string"
                         }
                     }
                 },
@@ -164,8 +218,7 @@
                         "description": "The list of the errors.",
                         "type": "array",
                         "items": {
-                            "type": "string",
-                            "example": ""
+                            "type": "string"
                         }
                     }
                 },
@@ -214,6 +267,31 @@
                         "items": {
                             "type": "string"
                         }
+                    }
+                },
+                "type": "object"
+            },
+            "UserRegister": {
+                "required": [
+                    "name",
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "The name that identifies the user.",
+                        "type": "string",
+                        "example": "Butrint"
+                    },
+                    "email": {
+                        "description": "The email of the product that he will use to login",
+                        "type": "string",
+                        "example": "test@test.com"
+                    },
+                    "password": {
+                        "description": "The password that the user will use to log in.",
+                        "type": "string",
+                        "example": "12341234"
                     }
                 },
                 "type": "object"
@@ -305,6 +383,21 @@
                         "type": "number",
                         "format": "float",
                         "example": 155
+                    }
+                },
+                "type": "object"
+            },
+            "UserResource": {
+                "properties": {
+                    "name": {
+                        "description": "The name of the user.",
+                        "type": "string",
+                        "example": "Test 1"
+                    },
+                    "email": {
+                        "description": "The email of the user.",
+                        "type": "string",
+                        "example": "test@test.com"
                     }
                 },
                 "type": "object"

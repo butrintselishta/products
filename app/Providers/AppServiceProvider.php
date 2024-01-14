@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Response::macro('success', function ($value) {
             return Response::json([
-                "success" => true,
+                "statusCode" => 200,
                 "data" => $value,
             ]);
         });

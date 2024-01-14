@@ -49,15 +49,29 @@ php artisan key:generate
 
 <br/>
 
-6. Run database migrations and seeders
+6. Generate the JWT Secret key:
+
+```bash
+php artisan jwt:secret
+```
+
+<br/>
+
+7. Run database migrations and seeders
 ```bash
 php artisan migrate --seed
 ```
 > If you haven't created the DB manually, after you run the command above you, you will get a warning that says 'The database 'products' does not exist on the 'mysql' connection.', please type **Y** then press **ENTER** to create the database in MySQL.
 
 <br/>
-7. Start the Development Server:
+
+8. Start the Development Server:
 
 ```bash
 php artisan serve
 ```
+<br/>
+<br/>
+
+## How to test the functionality?
+

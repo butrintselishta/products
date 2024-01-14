@@ -105,7 +105,7 @@ class Handler extends ExceptionHandler
      *     schema="UnauthenticatedResponse",
      *     @OA\Property(property="statusCode",description="The status code.",type="number",default=401),
      *     @OA\Property(property="message",description="Unauthenticated error message.",type="string",default=""),
-     *     @OA\Property(property="errors",description="The list of the errors.",type="array"),
+     *     @OA\Property(property="errors",description="The list of the errors.",type="array",@OA\Items(type="string"))
      * )
      *
      * Handle unauthorized error reponse
@@ -124,7 +124,7 @@ class Handler extends ExceptionHandler
      *     schema="NotFoundResponse",
      *     @OA\Property(property="statusCode",description="The status code.",type="number",default=404),
      *     @OA\Property(property="message",description="Not found error message.",type="string",default=""),
-     *     @OA\Property(property="errors",description="The list of the errors.",type="array"),
+     *     @OA\Property(property="errors",description="The list of the errors.",type="array",@OA\Items(type="string"))
      * )
      *
      * Handle not found error reponse
@@ -144,7 +144,7 @@ class Handler extends ExceptionHandler
      *     schema="MethodNotAllowedResponse",
      *     @OA\Property(property="statusCode",description="The status code.",type="number",default=405),
      *     @OA\Property(property="message",description="Method not allowed error message.",type="string",default=""),
-     *     @OA\Property(property="errors",description="The list of the errors.",type="array"),
+     *     @OA\Property(property="errors",description="The list of the errors.",type="array",@OA\Items(type="string"))
      * )
      *
      * Handle method not allowed error reponse
@@ -181,7 +181,7 @@ class Handler extends ExceptionHandler
      *     schema="ServerErrorResponse",
      *     @OA\Property(property="statusCode",description="The status code.",type="number",default=500),
      *     @OA\Property(property="message",description="Unauthenticated error message.",type="string",default="Something went wrong, please contact our support."),
-     *     @OA\Property(property="errors",description="The list of the errors.",type="array"),
+     *     @OA\Property(property="errors",description="The list of the errors.",type="array",@OA\Items(type="string"))
      * )
      *
      * Handle general/server error reponse

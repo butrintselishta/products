@@ -22,7 +22,7 @@ class ProductController extends Controller
     /**
      * Update a specific product in database
      *
-     * @OA\Patch (
+     * @OA\Put (
      *     path="/api/products/{id}",
      *     operationId="updateProduct",
      *     tags={"Products"},
