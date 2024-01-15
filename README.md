@@ -70,8 +70,3 @@ php artisan migrate --seed
 ```bash
 php artisan serve
 ```
-<br/>
-<br/>
-
-## How to test the functionality?
-

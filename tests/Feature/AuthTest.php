@@ -33,7 +33,7 @@ class AuthTest extends TestCase
     * Test logout.
     *
     */
-    public function testLogout()
+    public function test_logout()
     {
         $user = User::factory()->create();
         $this->actingAs($user);
