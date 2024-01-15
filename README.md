@@ -39,6 +39,7 @@ composer install
 ```bash
 cp .env.example .env
 ```
+> WARNING: Make sure you have the correct DB configurations set in **.env** before proceeding.
 
 <br/>
 
@@ -65,7 +66,12 @@ php artisan migrate --seed
 
 <br/>
 
-8. Start the Development Server:
+8. Import the products in DB by running this command:
+```bash
+php artisan import:products
+```
+
+9. Start the Development Server:
 
 ```bash
 php artisan serve
