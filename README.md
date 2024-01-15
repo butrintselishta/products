@@ -54,7 +54,7 @@ php artisan key:generate
 ```bash
 php artisan jwt:secret
 ```
-
+> You will be shown a warning that needs confirmation to 'invalidate all existing tokens', press **Y**.
 <br/>
 
 7. Run database migrations and seeders

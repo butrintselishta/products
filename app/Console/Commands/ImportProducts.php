@@ -44,7 +44,6 @@ class ImportProducts extends Command
         try {
             $this->info("Proccess started!");
             $products = $this->apiClient->get();
-            dd($products);
 
             $progressBar = $this->output->createProgressBar(count($products));
             $progressBar->start();
