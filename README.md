@@ -61,7 +61,7 @@ php artisan jwt:secret
 ```bash
 php artisan migrate --seed
 ```
-> If you haven't created the DB manually, after you run the command above you, you will get a warning that says 'The database 'products' does not exist on the 'mysql' connection.', please type **Y** then press **ENTER** to create the database in MySQL.
+> If you haven't created the DB manually, after you run the command above, you will get a warning that says 'The database 'products' does not exist on the 'mysql' connection.', please type **Y** then press **ENTER** to create the database in MySQL.
 
 <br/>
 
