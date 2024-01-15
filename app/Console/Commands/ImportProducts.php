@@ -7,7 +7,6 @@ use App\Services\ProductService;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 
 class ImportProducts extends Command
 {

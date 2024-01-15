@@ -11,7 +11,7 @@ class CategoryService
      * @param string $categoryTitle
      * @return Category
      */
-    public function findByTitle(string $categoryTitle): Category
+    public function findByTitle(string $categoryTitle): Category|null
     {
         return Category::where('title', $categoryTitle)->first();
     }
